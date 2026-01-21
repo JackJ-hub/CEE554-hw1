@@ -1,0 +1,65 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage{titling}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{minted}    % 需要 -shell-escape
+\usepackage{caption}   % 用于 captionof
+\usepackage{amsmath,amssymb,bm}
+\usepackage{mathtools}
+\usepackage{siunitx}
+\usepackage{physics}
+\usepackage{bm}
+\usepackage{listings}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{subcaption}
+
+\usepackage[utf8]{inputenc}
+\usepackage{newunicodechar}
+\newunicodechar{−}{\textminus}
+
+\lstset{basicstyle=\ttfamily\small, frame=single}
+
+\usepackage{subcaption} % 提供 subfigure 环境
+
+\hypersetup{
+  colorlinks=true,       % colored text instead of boxes
+  linkcolor=black,       % section/figure refs
+  citecolor=black,
+  urlcolor=blue,         % URLs
+  pdfborder={0 0 0}      % no boxes just in case
+}
+
+
+\setlength{\droptitle}{-3em}
+\title{ME523 HW11}
+\author{Chengsheng Jiang}
+\date{Dec 2025}
+
+\lstdefinestyle{py}{
+  language=Python,
+  basicstyle=\ttfamily\small,
+  breaklines=true, frame=single,
+  numbers=left, numberstyle=\tiny,
+  keywordstyle=\color{blue!70!black},
+  commentstyle=\color{gray!70!black},
+  stringstyle=\color{green!40!black},
+  tabsize=2, showstringspaces=false
+}
+\lstset{style=py}
+
+\begin{document}
+\maketitle
+
+\input{part1} % 不要写 .tex 后缀也可以
+\input{part2}
+\input{part3}
+
+\end{document}

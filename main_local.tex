@@ -1,63 +1,187 @@
-\documentclass{article}
-\usepackage{amsmath,amssymb}
-\usepackage{graphicx}
+\documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
-\usepackage{titling}
-\usepackage{xcolor}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{hyperref}
-\usepackage{listings}
-\usepackage{hyperref}
-\usepackage{graphicx}
-\usepackage{minted}    % 需要 -shell-escape
-\usepackage{caption}   % 用于 captionof
-\usepackage{amsmath,amssymb,bm}
-\usepackage{mathtools}
-\usepackage{siunitx}
-\usepackage{physics}
-\usepackage{bm}
-\usepackage{listings}
-\usepackage[T1]{fontenc}
-\usepackage{graphicx}
-\usepackage{subcaption}
+\usepackage{xcolor}
 
-\usepackage[utf8]{inputenc}
-\usepackage{newunicodechar}
-\newunicodechar{−}{\textminus}
-
-\lstset{basicstyle=\ttfamily\small, frame=single}
-
-\usepackage{subcaption} % 提供 subfigure 环境
-
-\hypersetup{
-  colorlinks=true,       % colored text instead of boxes
-  linkcolor=black,       % section/figure refs
-  citecolor=black,
-  urlcolor=blue,         % URLs
-  pdfborder={0 0 0}      % no boxes just in case
-}
-
-
-\setlength{\droptitle}{-3em}
-\title{CEE554 HW1}
-\author{Chengsheng Jiang}
-\date{Jan 2026}
-
-\lstdefinestyle{py}{
-  language=Python,
-  basicstyle=\ttfamily\small,
-  breaklines=true, frame=single,
-  numbers=left, numberstyle=\tiny,
-  keywordstyle=\color{blue!70!black},
-  commentstyle=\color{gray!70!black},
-  stringstyle=\color{green!40!black},
-  tabsize=2, showstringspaces=false
-}
-\lstset{style=py}
+\title{CEE 554 HW1 --- Q1: Perceptron Learning Algorithm (PLA) on Bridge Condition Data}
+\author{Jack}
+\date{}
 
 \begin{document}
 \maketitle
-\input{Q1}
 
+\section*{Problem1 Statement}
+Dataset \texttt{Bridge\_Condition.txt} contains records $(x_1, x_2, y)$, where $x_1$ is the deck condition rating, $x_2$ is the superstructure condition rating, and $y\in\{-1,+1\}$ is the class label. The first 20 records form Dataset 1, and all 40 records form Dataset 2.
+
+\section*{(a) Visualize Dataset 1}
+Figure~\ref{fig:a_scatter} shows the scatter plot of Dataset 1 in the $(x_1, x_2)$ plane. Based on the visualization, Dataset 1 appears \textbf{linearly separable}: the points can be separated by a single straight line without overlap.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.62\linewidth]{Q1.png}
+  \caption{Dataset 1 scatter plot ($y=+1$ in red, $y=-1$ in green).}
+  \label{fig:a_scatter}
+\end{figure}
+
+\section*{(b) Run PLA on Dataset 1 (file order, until convergence)}
+PLA is initialized at $w(0)=0$ and processes points sequentially in the file order, looping over the dataset until convergence.
+
+\subsection*{(b-i) Number of updates until convergence}
+The number of weight updates until convergence is:
+\[
+\boxed{\text{updates} = 85}
+\]
+
+\subsection*{(b-ii) Final decision boundary}
+Figure~\ref{fig:b_boundary} plots the final separating line (decision boundary) on top of the Dataset 1 scatter plot.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.62\linewidth]{Q1b2.png}
+  \caption{Dataset 1 with final PLA decision boundary.}
+  \label{fig:b_boundary}
+\end{figure}
+
+\subsection*{(b-iii) In-sample misclassification rate per iteration}
+Figure~\ref{fig:b_ein} shows the in-sample misclassification rate $E_{\text{in}}$ versus iteration. Here, one iteration corresponds to one full pass/epoch over Dataset 1, since $E_{\text{in}}$ is recorded once after each pass in the implementation.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.72\linewidth]{Q1b3.png}
+  \caption{$E_{\text{in}}$ per iteration for PLA on Dataset 1.}
+  \label{fig:b_ein}
+\end{figure}
+
+\section*{(c) Effect of shuffling on Dataset 1}
+Dataset 1 is randomly shuffled and PLA is rerun from $w(0)=0$. This experiment is repeated for 10 different random shuffles.
+
+\subsection*{(c-i) Updates to convergence for each run}
+The number of updates to convergence for each shuffle run is reported below:
+
+\begin{center}
+\begin{tabular}{@{}cc@{}}
+\toprule
+Run & Updates to convergence \\
+\midrule
+1  & 45 \\
+2  & 44 \\
+3  & 47 \\
+4  & 83 \\
+5  & 32 \\
+6  & 74 \\
+7  & 43 \\
+8  & 32 \\
+9  & 51 \\
+10 & 11 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{(c-ii) Why updates depend on data order (2--4 sentences)}
+The number of PLA updates depends on the order of data points because PLA updates its weight vector whenever it encounters a misclassified point, and each update changes the subsequent classification of later points. Different orders therefore lead to different update trajectories in parameter space; some orders quickly move the boundary toward a separating solution (fewer updates), while others cause more oscillation or repeated corrections (more updates). Even when the dataset is linearly separable, PLA does not guarantee monotonic decrease of training error, so the convergence speed can vary with presentation order.
+
+\section*{(d) Visualize Dataset 2}
+Figure~\ref{fig:d_scatter} shows the scatter plot of Dataset 2. Based on the plot, Dataset 2 is \textbf{not linearly separable}: the classes overlap in the plane so no single line can separate them.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.62\linewidth]{Q1d.png}
+  \caption{Dataset 2 scatter plot ($y=+1$ in red, $y=-1$ in green).}
+  \label{fig:d_scatter}
+\end{figure}
+
+\section*{(e) Run PLA on Dataset 2 with a stopping rule + Pocket algorithm}
+\subsection*{(e-i) Shuffle once and (e-ii) run for maximum $T$ updates}
+Dataset 2 is shuffled once. PLA is run from $w(0)=0$ for a maximum of $T$ updates. In this part, we define one iteration as one weight update, consistent with the stopping rule ``maximum of $T$ updates.'' We use $T=1000$.
+
+\subsection*{(e-iii) Misclassification rate vs iterations}
+Figure~\ref{fig:e_plain_pla} shows the misclassification rate versus the number of updates (iterations) for standard PLA on Dataset 2.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.72\linewidth]{Q1e.png}
+  \caption{Dataset 2: misclassification rate vs update number for standard PLA (stopping rule at $T$ updates).}
+  \label{fig:e_plain_pla}
+\end{figure}
+
+\subsection*{(e-iv) Pocket algorithm}
+Pocket PLA keeps the best-performing weight vector seen so far (lowest misclassification rate).
+
+\subsubsection*{(e-iv-A) Best misclassification rate and $w_{\text{best}}$}
+Best (lowest) misclassification rate achieved:
+\[
+\boxed{\min E_{\text{in}} = 0.0714 \; (\approx 1/14)}
+\]
+Corresponding weight vector:
+\[
+\boxed{w_{\text{best}} = [-19,\; 3,\; 1]^T}
+\]
+For reference, the weight vector after $T$ updates is:
+\[
+w(T) = [-122,\; 17,\; 3]^T
+\]
+
+\subsubsection*{(e-iv-B) Decision boundary of $w(T)$ vs $w_{\text{best}}$}
+Figure~\ref{fig:e_two_lines} plots the decision boundaries for $w(T)$ (the weight after $T$ updates) and for $w_{\text{best}}$ on the same scatter plot.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.62\linewidth]{Q1e_2.png}
+  \caption{Dataset 2 with decision boundaries for $w(T)$ and $w_{\text{best}}$ (Pocket).}
+  \label{fig:e_two_lines}
+\end{figure}
+
+\subsubsection*{(e-iv-C) Compare PLA vs Pocket PLA}
+In the non-separable setting, standard PLA continues to update and the misclassification rate can oscillate because improvements on some points may worsen classification on others; thus $w(T)$ may be a transient state rather than the best solution encountered. Pocket PLA evaluates performance after updates and stores the best-performing weight vector, so it returns a more reliable classifier (lower training misclassification) even when later updates degrade performance. Consequently, Pocket PLA achieves a lower (or equal) misclassification rate than the final $w(T)$ from standard PLA and provides a more stable decision boundary.
+
+
+
+
+
+
+\section*{Problem 2: Logistic-MSE Classifier}
+
+We consider the logistic mapping
+\[
+\sigma(z)=\frac{1}{1+e^{-z}},\qquad \rho(z)=2\sigma(z)-1,
+\]
+and the logistic-MSE objective
+\[
+C(\mathbf{w})=\frac{1}{N}\sum_{i=1}^{N}\big(\rho(\mathbf{w}^{\top}\mathbf{x}_i)-y_i\big)^2,
+\quad y_i\in\{-1,+1\}.
+\]
+
+\subsection*{(a) Stochastic Gradient Descent (SGD) Update Rule}
+
+Define the per-sample loss
+\[
+\ell_i(\mathbf{w})=\big(\rho(z_i)-y_i\big)^2,\qquad z_i=\mathbf{w}^{\top}\mathbf{x}_i.
+\]
+By the chain rule,
+\[
+\nabla_{\mathbf{w}}\ell_i(\mathbf{w})
+=2(\rho(z_i)-y_i)\,\rho'(z_i)\,\nabla_{\mathbf{w}}z_i
+=2(\rho(z_i)-y_i)\,\rho'(z_i)\,\mathbf{x}_i.
+\]
+Since $\rho(z)=2\sigma(z)-1$, we have
+\[
+\rho'(z)=2\sigma'(z)=2\sigma(z)\bigl(1-\sigma(z)\bigr).
+\]
+Substituting into the gradient yields
+\[
+\nabla_{\mathbf{w}}\ell_i(\mathbf{w})
+=2(\rho(z_i)-y_i)\cdot 2\sigma(z_i)\bigl(1-\sigma(z_i)\bigr)\,\mathbf{x}_i
+=4(\rho(z_i)-y_i)\sigma(z_i)\bigl(1-\sigma(z_i)\bigr)\mathbf{x}_i.
+\]
+Therefore, the SGD update using a single training example $(\mathbf{x}_i,y_i)$ is
+\[
+\boxed{
+\mathbf{w}\leftarrow \mathbf{w}-\;4\big(\rho(z_i)-y_i\big)\sigma(z_i)\bigl(1-\sigma(z_i)\bigr)\mathbf{x}_i,
+\qquad z_i=\mathbf{w}^{\top}\mathbf{x}_i
+}
+\]
 
 \end{document}
